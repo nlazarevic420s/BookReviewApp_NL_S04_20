@@ -3,6 +3,7 @@ using BookReviewApp_NL_S04_20.Data;
 using BookReviewApp_NL_S04_20.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using BookReviewApp_NL_S04_20.Models;
+using BookReviewApp_NL_S04_20.DTOs;
 
 namespace BookReviewApp_NL_S04_20.Services
 {
@@ -20,6 +21,7 @@ namespace BookReviewApp_NL_S04_20.Services
         Task<bool> DeleteBookAsync(int id);
 
         Task<BookDetailsViewModel?> GetBookDetailsAsync(int bookId, string? currentUserId);
+        Task<(List<BookViewModel> Books, int TotalCount)> GetPagedBooksAsync(BookQueryOptions options);
     }
 
     public class BookService : IBookService
@@ -274,6 +276,53 @@ namespace BookReviewApp_NL_S04_20.Services
                 Reviews = reviews,
                 CurrentUserId = currentUserId
             };
+        }
+
+        public async Task<(List<BookViewModel> Books, int TotalCount)> GetPagedBooksAsync(BookQueryOptions options)
+        {
+            var query = _context.Books
+                .Include(b => b.Publisher)
+                .Include(b => b.Reviews)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(options.SearchString))
+            {
+                string search = options.SearchString.ToLower();
+                query = query
+                    .Where(b =>
+                        b.Title.ToLower().Contains(search) 
+                        || b.Publisher.Name.ToLower().Contains(search)
+                    );
+            }
+
+            query = options.SortOrder switch
+            {
+                "title_desc" => query.OrderByDescending(b => b.Title),
+                "year_asc" => query.OrderBy(b => b.PublicationYear),
+                "year_desc" => query.OrderByDescending(b => b.PublicationYear),
+                "rating_asc" => query.OrderBy(b => b.Reviews.Any() ? b.Reviews.Average(r => r.Rating) : 0),
+                "rating_desc" => query.OrderByDescending(b => b.Reviews.Any() ? b.Reviews.Average(r => r.Rating) : 0),
+                _ => query.OrderBy(b => b.Title),
+            };
+
+            int totalCount = await query.CountAsync();
+
+            var books = await query
+                .Skip((options.PageNumber - 1) * options.PageSize)
+                .Take(options.PageSize)
+                .Select(b => new BookViewModel
+                {
+                    Id = b.Id,
+                    Title = b.Title,
+                    PublicationYear = b.PublicationYear,
+                    PublisherName = b.Publisher.Name,
+                    PublisherId = b.PublisherId,
+                    AverageRating = b.Reviews.Any() ? b.Reviews.Average(r => r.Rating) : 0,
+                    ReviewCount = b.Reviews.Count()
+                })
+                .ToListAsync();
+
+            return (books, totalCount);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using BookReviewApp_NL_S04_20.Models;
+﻿using BookReviewApp_NL_S04_20.DTOs;
+using BookReviewApp_NL_S04_20.Models;
 using BookReviewApp_NL_S04_20.Models.ViewModels;
 using BookReviewApp_NL_S04_20.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -21,11 +22,29 @@ namespace BookReviewApp_NL_S04_20.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string searchString, int page = 1, int pageSize = 5)
         {
-            var books = await _bookService.GetAllBooksWithRatingsAsync();
+            var options = new BookQueryOptions
+            {
+                SearchString = searchString,
+                SortOrder = sortOrder,
+                PageNumber = page,
+                PageSize = 5
+            };
 
-            return View(books);
+            var (books, totalCount) = await _bookService.GetPagedBooksAsync(options);
+
+            var viewModel = new BookIndexViewModel
+            {
+                Books = books,
+                CurrentPage = page,
+                PageSize = pageSize,
+                TotalItems = totalCount,
+                SearchString = searchString,
+                SortOrder = sortOrder
+            };
+
+            return View(viewModel);
         }
 
         [HttpGet]
