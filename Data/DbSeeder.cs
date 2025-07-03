@@ -13,9 +13,12 @@ namespace BookReviewApp_NL_S04_20.Data
             _context = context;
         }
 
-        public void Seed()
+        public async Task SeedAsync()
         {
-            if (_context.Books.Any()) return;
+            if (_context.Books.Any())
+            {
+                return;
+            }
 
             // --- 1. Autori ---
             var authors = new List<Author>
@@ -27,8 +30,8 @@ namespace BookReviewApp_NL_S04_20.Data
                 new Author { Name = "Stephen King" },  // ID 5
                 new Author { Name = "Dan Brown" },     // ID 6
             };
-            _context.Authors.AddRange(authors);
-            _context.SaveChanges();
+            await _context.Authors.AddRangeAsync(authors);
+            await _context.SaveChangesAsync();
 
             // --- 2. Izdavači ---
             var publishers = new List<Publisher>
@@ -37,8 +40,8 @@ namespace BookReviewApp_NL_S04_20.Data
                 new Publisher { Name = "HarperCollins" },// ID 2
                 new Publisher { Name = "Bloomsbury" },   // ID 3
             };
-            _context.Publishers.AddRange(publishers);
-            _context.SaveChanges();
+            await _context.Publishers.AddRangeAsync(publishers);
+            await _context.SaveChangesAsync();
 
             // --- 3. Kategorije ---
             var categories = new List<Category>
@@ -49,8 +52,8 @@ namespace BookReviewApp_NL_S04_20.Data
                 new Category { Name = "Classic" },        // ID 4
                 new Category { Name = "Horror" },         // ID 5
             };
-            _context.Categories.AddRange(categories);
-            _context.SaveChanges();
+            await _context.Categories.AddRangeAsync(categories);
+            await _context.SaveChangesAsync();
 
             // --- 4. Knjige ---
             var books = new List<Book>
@@ -66,8 +69,8 @@ namespace BookReviewApp_NL_S04_20.Data
                 new Book { Title = "Fantastic Beasts", PublicationYear = 2016, PublisherId = 3 },      // ID 9
                 new Book { Title = "The Lord of the Rings", PublicationYear = 1954, PublisherId = 2 }, // ID 10
             };
-            _context.Books.AddRange(books);
-            _context.SaveChanges();
+            await _context.Books.AddRangeAsync(books);
+            await _context.SaveChangesAsync();
 
             // --- 5. Relacija: BookCategory ---
             var bookCategories = new List<BookCategory>
@@ -84,8 +87,8 @@ namespace BookReviewApp_NL_S04_20.Data
                 new BookCategory { BookId = 10, CategoryId = 2 }, // LOTR -> Fantasy
                 new BookCategory { BookId = 10, CategoryId = 4 }, // LOTR -> Classic
             };
-            _context.BookCategories.AddRange(bookCategories);
-            _context.SaveChanges();
+            await _context.BookCategories.AddRangeAsync(bookCategories);
+            await _context.SaveChangesAsync();
 
             // --- 6. Relacija: AuthorBook ---
             var authorBooks = new List<AuthorBook>
@@ -102,8 +105,8 @@ namespace BookReviewApp_NL_S04_20.Data
                 new AuthorBook { AuthorId = 4, BookId = 10 }, // Tolkien -> LOTR
                 new AuthorBook { AuthorId = 3, BookId = 10 }, // Rowling + Tolkien -> LOTR (2 autora)
             };
-            _context.AuthorBooks.AddRange(authorBooks);
-            _context.SaveChanges();
+            await _context.AuthorBooks.AddRangeAsync(authorBooks);
+            await _context.SaveChangesAsync();
         }
 
         public static async Task SeedRolesAsync(IServiceProvider service)

@@ -62,8 +62,7 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var seeder = services.GetRequiredService<DbSeeder>();
-    seeder.Seed();
-
+    await seeder.SeedAsync();
     await DbSeeder.SeedRolesAsync(services);
 }
 
