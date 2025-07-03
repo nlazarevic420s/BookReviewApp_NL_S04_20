@@ -1,4 +1,5 @@
 ﻿@model BookReviewApp_NL_S04_20.Models.ViewModels.BookIndexViewModel
+@using BookReviewApp_NL_S04_20.Constants
 
 @{
     ViewData["Title"] = "Books";
@@ -19,11 +20,11 @@
         <input type="text" name="searchString" value="@Model.SearchString" class="form-control" placeholder="Search by title or publisher..." />
         <select name="sortOrder" class="form-select">
             <option value="">Sort by Title (A-Z)</option>
-            <option value="title_desc" selected="@(Model.SortOrder == "title_desc")">Title (Z-A)</option>
-            <option value="year_asc" selected="@(Model.SortOrder == "year_asc")">Year ASC</option>
-            <option value="year_desc" selected="@(Model.SortOrder == "year_desc")">Year DESC</option>
-            <option value="rating_asc" selected="@(Model.SortOrder == "rating_asc")">Rating ASC</option>
-            <option value="rating_desc" selected="@(Model.SortOrder == "rating_desc")">Rating DESC</option>
+            <option value="@BookSortOptions.TitleDesc" selected="@(Model.SortOrder == BookSortOptions.TitleDesc)">Title (Z-A)</option>
+            <option value="@BookSortOptions.YearAsc" selected="@(Model.SortOrder == BookSortOptions.YearAsc)">Year ASC</option>
+            <option value="@BookSortOptions.YearDesc" selected="@(Model.SortOrder == BookSortOptions.YearDesc)">Year DESC</option>
+            <option value="@BookSortOptions.RatingAsc" selected="@(Model.SortOrder == BookSortOptions.RatingAsc)">Rating ASC</option>
+            <option value="@BookSortOptions.RatingDesc" selected="@(Model.SortOrder == BookSortOptions.RatingDesc)">Rating DESC</option>
         </select>
         <button type="submit" class="btn btn-outline-primary">Apply</button>
     </div>

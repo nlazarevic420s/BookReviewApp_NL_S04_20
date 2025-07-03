@@ -1,4 +1,5 @@
-﻿using BookReviewApp_NL_S04_20.DTOs;
+﻿using BookReviewApp_NL_S04_20.Constants;
+using BookReviewApp_NL_S04_20.DTOs;
 using BookReviewApp_NL_S04_20.Models;
 using BookReviewApp_NL_S04_20.Models.ViewModels;
 using BookReviewApp_NL_S04_20.Services;
@@ -24,6 +25,11 @@ namespace BookReviewApp_NL_S04_20.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index(string sortOrder, string searchString, int page = 1, int pageSize = 5)
         {
+            if (!BookSortOptions.All.Contains(sortOrder))
+            {
+                sortOrder = null;
+            }
+
             var options = new BookQueryOptions
             {
                 SearchString = searchString,

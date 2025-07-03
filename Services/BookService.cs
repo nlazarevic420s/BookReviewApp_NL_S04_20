@@ -4,6 +4,7 @@ using BookReviewApp_NL_S04_20.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using BookReviewApp_NL_S04_20.Models;
 using BookReviewApp_NL_S04_20.DTOs;
+using BookReviewApp_NL_S04_20.Constants;
 
 namespace BookReviewApp_NL_S04_20.Services
 {
@@ -297,11 +298,11 @@ namespace BookReviewApp_NL_S04_20.Services
 
             query = options.SortOrder switch
             {
-                "title_desc" => query.OrderByDescending(b => b.Title),
-                "year_asc" => query.OrderBy(b => b.PublicationYear),
-                "year_desc" => query.OrderByDescending(b => b.PublicationYear),
-                "rating_asc" => query.OrderBy(b => b.Reviews.Any() ? b.Reviews.Average(r => r.Rating) : 0),
-                "rating_desc" => query.OrderByDescending(b => b.Reviews.Any() ? b.Reviews.Average(r => r.Rating) : 0),
+                BookSortOptions.TitleDesc => query.OrderByDescending(b => b.Title),
+                BookSortOptions.YearAsc => query.OrderBy(b => b.PublicationYear),
+                BookSortOptions.YearDesc => query.OrderByDescending(b => b.PublicationYear),
+                BookSortOptions.RatingAsc => query.OrderBy(b => b.Reviews.Any() ? b.Reviews.Average(r => r.Rating) : 0),
+                BookSortOptions.RatingDesc => query.OrderByDescending(b => b.Reviews.Any() ? b.Reviews.Average(r => r.Rating) : 0),
                 _ => query.OrderBy(b => b.Title),
             };
 
