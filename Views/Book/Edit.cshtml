@@ -1,0 +1,62 @@
+﻿@model BookReviewApp_NL_S04_20.Models.ViewModels.BookViewModel
+
+<h1>Edit Book</h1>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label asp-for="Title" class="form-label"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="PublicationYear" class="form-label"></label>
+        <input asp-for="PublicationYear" class="form-control" />
+        <span asp-validation-for="PublicationYear" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="PublisherId" class="form-label">Publisher</label>
+        <select asp-for="PublisherId" asp-items="Model.Publishers" class="form-select"></select>
+        <span asp-validation-for="PublisherId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Authors</label>
+        @foreach (var author in Model.Authors)
+        {
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox"
+                       name="SelectedAuthorIds"
+                       value="@author.Value"
+                @(author.Selected ? "checked" : "") />
+                <label class="form-check-label">@author.Text</label>
+            </div>
+        }
+        <span asp-validation-for="SelectedAuthorIds" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Categories</label>
+        @foreach (var category in Model.Categories)
+        {
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox"
+                       name="SelectedCategoryIds"
+                       value="@category.Value"
+                @(category.Selected ? "checked" : "") />
+                <label class="form-check-label">@category.Text</label>
+            </div>
+        }
+        <span asp-validation-for="SelectedCategoryIds" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

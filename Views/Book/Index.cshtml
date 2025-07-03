@@ -1,0 +1,48 @@
+﻿@model IEnumerable<BookReviewApp_NL_S04_20.Models.ViewModels.BookViewModel>
+
+@{
+    ViewData["Title"] = "Books";
+    var isAdmin = User.IsInRole("Admin");
+}
+
+<h1>Books</h1>
+
+@if (isAdmin)
+{
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Create New</a>
+    </p> 
+}
+
+<table class="table table-striped table-hover table-bordered align-middle">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Publication Year</th>
+            <th>Publisher</th>
+            <th>Average Rating</th>
+            <th>Reviews</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var book in Model)
+        {
+            <tr>
+                <td>@book.Title</td>
+                <td>@book.PublicationYear</td>
+                <td>@book.PublisherName</td>
+                <td>@(book.AverageRating > 0 ? book.AverageRating.ToString("F1") : "-")</td>
+                <td>@book.ReviewCount</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@book.Id" class="btn btn-outline-primary me-2">Details</a>
+                    @if (isAdmin)
+                    {
+                        <a asp-action="Edit" asp-route-id="@book.Id" class="btn btn-outline-secondary me-2">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@book.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

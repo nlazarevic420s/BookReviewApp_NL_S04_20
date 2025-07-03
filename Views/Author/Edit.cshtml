@@ -1,0 +1,24 @@
+﻿@model BookReviewApp_NL_S04_20.Models.ViewModels.AuthorViewModel
+
+@{
+    ViewData["Title"] = "Edit Author";
+}
+
+<h1>Edit Author</h1>
+
+<form asp-action="Edit" method="post">
+    <div class="form-group mb-3">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <input type="hidden" asp-for="Id" />
+
+    <button type="submit" class="btn btn-success">Save</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,42 @@
+﻿@model IEnumerable<BookReviewApp_NL_S04_20.Models.Author>
+
+@{
+    ViewData["Title"] = "Authors";
+    var isAdmin = User.IsInRole("Admin");
+}
+
+<h1>Authors</h1>
+
+@if (isAdmin)
+{
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Create New</a>
+    </p>
+}
+
+<table class="table table-striped table-hover table-bordered align-middle">
+    <thead>
+        <tr>
+            <th>Name</th>
+            @if (isAdmin)
+            {
+                <th>Actions</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var author in Model)
+        {
+            <tr>
+                <td>@author.Name</td>
+                @if (isAdmin)
+                {
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@author.Id" class="btn btn-outline-primary me-2">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@author.Id" class="btn btn-outline-danger">Delete</a>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
